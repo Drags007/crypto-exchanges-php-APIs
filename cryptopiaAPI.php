@@ -7,15 +7,7 @@ class Cryptopia extends Exchange{
       $this->privateKey = $priv;
       $this->publicKey = $pub;
 
-      $result = json_decode($this->apiCall("GetBalance", array( 'Currency'=> 'BTC' )), true); // There is a bug in the API if you send no parameters it will return Success:true Error: Market not found.
-         // Array
-         // (
-         //    [Success] => 1
-         //    [Message] =>
-         //    [Data] =>
-         //    [Error] => Market not found.
-         // )
-      // print_r($result);
+      $result = json_decode($this->apiCall("GetBalance", array( 'Currency'=> 'BTC' )), true); 
       if( $result['Success'] != "true" ) {
          throw new Exception("Can't Connect to Cryptopia, Error: " . $result['Error'] );
          return false;
@@ -29,7 +21,6 @@ class Cryptopia extends Exchange{
       static $ch = null;
       $ch = curl_init();
       curl_setopt($ch, CURLOPT_RETURNTRANSFER, true);
-      //curl_setopt($ch, CURLOPT_USERAGENT, 'Mozilla/4.0 (compatible; Cryptopia.co.nz API PHP client; FreeBSD; PHP/'.phpversion().')');
       if ( in_array( $method ,$public_set ) ) {
          $url = "https://www.cryptopia.co.nz/api/" . $method;
          if ($req) { foreach ($req as $r ) { $url = $url . '/' . $r; } }
@@ -120,15 +111,6 @@ class Cryptopia extends Exchange{
          $apiParams = array( 'TradePairId'=>$this->getExchangeSymbol($symbol) );       
       }
       $myOrders = json_decode($this->apiCall("GetOpenOrders", $apiParams), true);  
-      //print_r($myOrders);
-      // There is a bug in the API if you send no parameters it will return Success:true Error: Market not found.
-         // Array
-         // (
-         //    [Success] => 1
-         //    [Message] =>
-         //    [Data] =>
-         //    [Error] => Market not found.
-         // )
 
       $orders = array();
       $price = array();  // sort by price
